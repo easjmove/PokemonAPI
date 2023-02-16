@@ -24,11 +24,37 @@ namespace PokemonAPI.Repositories
             return new List<Pokemon>(_pokemons);
         }
 
+        public Pokemon? GetByID(int id)
+        {
+            return _pokemons.Find(x => x.Id == id);
+        }
+
         public Pokemon Add(Pokemon newPokemon)
         {
+            newPokemon.Validate();
             newPokemon.Id = _nextID++;
             _pokemons.Add(newPokemon);
             return newPokemon;
+        }
+
+        public Pokemon Delete(int id)
+        {
+            Pokemon foundPokemon = GetByID(id);
+            _pokemons.Remove(foundPokemon);
+            return foundPokemon;
+        }
+
+        public Pokemon Update(int id, Pokemon updates)
+        {
+            Pokemon foundPokemon = GetByID(id);
+            if (foundPokemon == null)
+            {
+                return null;
+            }
+            foundPokemon.Name = updates.Name;
+            foundPokemon.PokeDex = updates.PokeDex;
+            foundPokemon.Level = updates.Level;
+            return foundPokemon;
         }
     }
 }

@@ -33,10 +33,28 @@ namespace PokemonAPI.Controllers
         }
 
         // POST api/<PokemonsController>
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost]
-        public Pokemon Post([FromBody] Pokemon newPokemon)
+        public ActionResult<Pokemon> Post([FromBody] Pokemon newPokemon)
         {
-            return _repository.Add(newPokemon);
+            try
+            {
+                Pokemon createdPokemon = _repository.Add(newPokemon);
+                return Created($"api/pokemons/{createdPokemon.Id}", createdPokemon );
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<PokemonsController>/5
