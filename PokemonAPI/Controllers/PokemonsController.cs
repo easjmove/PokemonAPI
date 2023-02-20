@@ -20,16 +20,28 @@ namespace PokemonAPI.Controllers
 
         // GET: api/<PokemonsController>
         [HttpGet]
-        public IEnumerable<Pokemon> Get()
+        public ActionResult<IEnumerable<Pokemon>> Get()
         {
-            return _repository.GetAll();
+            List<Pokemon> result = _repository.GetAll();
+            if (result.Count < 1)
+            {
+                return NoContent(); // NotFound er også ok
+            }
+            return Ok(result);
         }
 
         // GET api/<PokemonsController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Pokemon> Get(int id)
         {
-            return "value";
+            Pokemon? foundPokemon = _repository.GetByID(id);
+            if (foundPokemon == null)
+            {
+                return NotFound();
+            }
+            return Ok(foundPokemon);
         }
 
         // POST api/<PokemonsController>
@@ -41,7 +53,7 @@ namespace PokemonAPI.Controllers
             try
             {
                 Pokemon createdPokemon = _repository.Add(newPokemon);
-                return Created($"api/pokemons/{createdPokemon.Id}", createdPokemon );
+                return Created($"api/pokemons/{createdPokemon.Id}", createdPokemon);
             }
             catch (ArgumentNullException ex)
             {
@@ -58,15 +70,40 @@ namespace PokemonAPI.Controllers
         }
 
         // PUT api/<PokemonsController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<Pokemon> Put(int id, [FromBody] Pokemon updates)
         {
+            try
+            {
+                Pokemon? updatedPokemon = _repository.Update(id, updates);
+                if (updatedPokemon == null)
+                {
+                    return NotFound();
+                }
+                return Ok(updatedPokemon);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<PokemonsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public Pokemon Delete(int id)
         {
+            return _repository.Delete(id);
         }
     }
 }

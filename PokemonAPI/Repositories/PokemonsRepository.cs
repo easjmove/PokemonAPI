@@ -44,9 +44,10 @@ namespace PokemonAPI.Repositories
             return foundPokemon;
         }
 
-        public Pokemon Update(int id, Pokemon updates)
+        public Pokemon? Update(int id, Pokemon updates)
         {
-            Pokemon foundPokemon = GetByID(id);
+            updates.Validate();
+            Pokemon? foundPokemon = GetByID(id);
             if (foundPokemon == null)
             {
                 return null;
