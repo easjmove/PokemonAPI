@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using PokemonAPI.Models;
 using PokemonAPI.Repositories;
 
@@ -6,6 +7,7 @@ using PokemonAPI.Repositories;
 
 namespace PokemonAPI.Controllers
 {
+    [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     //URI: api/pokemons
     [ApiController]
@@ -18,15 +20,19 @@ namespace PokemonAPI.Controllers
             _repository = repository;
         }
 
-        // GET: api/<PokemonsController>
+        // GET: api/Pokemons?minlevel=1&namefilter=har
         [HttpGet]
-        public ActionResult<IEnumerable<Pokemon>> Get()
+        public ActionResult<IEnumerable<Pokemon>> GetAll(
+            [FromHeader] int? amount,
+            [FromQuery] string? namefilter, 
+            [FromQuery] int? minlevel)
         {
-            List<Pokemon> result = _repository.GetAll();
+            List<Pokemon> result = _repository.GetAll(amount,namefilter);
             if (result.Count < 1)
             {
                 return NoContent(); // NotFound er også ok
             }
+            Response.Headers.Add("TotalAmount", "" + result.Count());
             return Ok(result);
         }
 
@@ -100,10 +106,17 @@ namespace PokemonAPI.Controllers
         }
 
         // DELETE api/<PokemonsController>/5
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        public Pokemon Delete(int id)
+        public ActionResult<Pokemon> Delete(int id)
         {
-            return _repository.Delete(id);
+            Pokemon? deletedPokemon = _repository.Delete(id);
+            if (deletedPokemon == null)
+            {
+                return NotFound();
+            }
+            return Ok(deletedPokemon);
         }
     }
 }

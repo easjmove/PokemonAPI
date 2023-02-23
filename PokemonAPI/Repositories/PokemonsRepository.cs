@@ -8,7 +8,7 @@ namespace PokemonAPI.Repositories
         private int _nextID;
         private List<Pokemon> _pokemons;
 
-        public PokemonsRepository() 
+        public PokemonsRepository()
         {
             _nextID = 1;
             _pokemons = new List<Pokemon>()
@@ -19,9 +19,23 @@ namespace PokemonAPI.Repositories
             };
         }
 
-        public List<Pokemon> GetAll()
+        public List<Pokemon> GetAll(int? amount, string? namefilter)
         {
-            return new List<Pokemon>(_pokemons);
+            List<Pokemon> result = new List<Pokemon>(_pokemons);
+
+            if (namefilter != null)
+            {
+                result = result.FindAll(pokemon => pokemon.Name.Contains(namefilter, 
+                    StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            if (amount != null)
+            {
+                int castAmount = (int) amount;
+                return result.Take(castAmount).ToList();
+            }
+
+            return result;
         }
 
         public Pokemon? GetByID(int id)
@@ -37,9 +51,13 @@ namespace PokemonAPI.Repositories
             return newPokemon;
         }
 
-        public Pokemon Delete(int id)
+        public Pokemon? Delete(int id)
         {
-            Pokemon foundPokemon = GetByID(id);
+            Pokemon? foundPokemon = GetByID(id);
+            if (foundPokemon == null)
+            {
+                return null;
+            }
             _pokemons.Remove(foundPokemon);
             return foundPokemon;
         }
