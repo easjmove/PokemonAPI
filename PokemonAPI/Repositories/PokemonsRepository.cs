@@ -3,7 +3,7 @@
 
 namespace PokemonAPI.Repositories
 {
-    public class PokemonsRepository
+    public class PokemonsRepository : IPokemonsRepository
     {
         private int _nextID;
         private List<Pokemon> _pokemons;
@@ -25,13 +25,13 @@ namespace PokemonAPI.Repositories
 
             if (namefilter != null)
             {
-                result = result.FindAll(pokemon => pokemon.Name.Contains(namefilter, 
+                result = result.FindAll(pokemon => pokemon.Name.Contains(namefilter,
                     StringComparison.InvariantCultureIgnoreCase));
             }
 
             if (amount != null)
             {
-                int castAmount = (int) amount;
+                int castAmount = (int)amount;
                 return result.Take(castAmount).ToList();
             }
 

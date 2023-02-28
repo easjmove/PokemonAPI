@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using PokemonAPI;
+using PokemonAPI.Contexts;
 using PokemonAPI.Repositories;
 
 const string policyName = "AllowAll";
@@ -30,8 +33,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-builder.Services.AddSingleton<PokemonsRepository>(new PokemonsRepository());
+bool useSql = true;
+if (useSql)
+{
+    var optionsBuilder =
+        new DbContextOptionsBuilder<PokemonContext>();
+    optionsBuilder.UseSqlServer(Secrets.ConnectionString);
+    PokemonContext context = 
+        new PokemonContext(optionsBuilder.Options);
+    builder.Services.AddSingleton<IPokemonsRepository>(
+        new PokemonsRepositoryDB(context));
+}
+else
+{
+    builder.Services.AddSingleton<IPokemonsRepository>
+        (new PokemonsRepository());
+}
 
 var app = builder.Build();
 

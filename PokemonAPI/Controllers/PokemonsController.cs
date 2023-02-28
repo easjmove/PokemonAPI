@@ -13,9 +13,9 @@ namespace PokemonAPI.Controllers
     [ApiController]
     public class PokemonsController : ControllerBase
     {
-        private PokemonsRepository _repository;
+        private IPokemonsRepository _repository;
 
-        public PokemonsController(PokemonsRepository repository)
+        public PokemonsController(IPokemonsRepository repository)
         {
             _repository = repository;
         }
