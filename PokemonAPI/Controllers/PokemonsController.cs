@@ -36,7 +36,7 @@ namespace PokemonAPI.Controllers
             return Ok(result);
         }
 
-        // GET api/<PokemonsController>/5
+        // GET api/Pokemons/5
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
