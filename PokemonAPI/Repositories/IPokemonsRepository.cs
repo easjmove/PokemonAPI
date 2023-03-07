@@ -1,4 +1,4 @@
-﻿using PokemonAPI.Models;
+﻿using PokemonLibrary;
 
 namespace PokemonAPI.Repositories
 {

@@ -1,5 +1,5 @@
 ﻿using PokemonAPI.Contexts;
-using PokemonAPI.Models;
+using PokemonLibrary;
 
 namespace PokemonAPI.Repositories
 {

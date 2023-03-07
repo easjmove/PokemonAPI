@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PokemonAPI.Models;
+using PokemonLibrary;
 
 namespace PokemonAPI.Contexts
 {
