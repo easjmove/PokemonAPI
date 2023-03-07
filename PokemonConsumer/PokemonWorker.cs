@@ -10,10 +10,15 @@ namespace PokemonConsumer
 {
     public class PokemonWorker
     {
+        private JsonSerializerOptions options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        };
+
         public void DoWork()
         {
             List<Pokemon>? pokemons = GetAll();
-            foreach (var pokemon in pokemons)
+            foreach (Pokemon pokemon in pokemons)
             {
                 Console.WriteLine(pokemon);
             }
@@ -23,11 +28,12 @@ namespace PokemonConsumer
         {
             using (HttpClient client = new HttpClient())
             {
-               HttpResponseMessage response = client.GetAsync(
-                   "https://pokemonapi20230216124134.azurewebsites.net/" +
-                   "api/pokemons").Result;
+                HttpResponseMessage response = client.GetAsync(
+                    "https://pokemonapi20230216124134.azurewebsites.net/" +
+                    "api/pokemons").Result;
                 string json = response.Content.ReadAsStringAsync().Result;
-                List<Pokemon>? list = JsonSerializer.Deserialize<List<Pokemon>>(json);
+                List<Pokemon>? list = JsonSerializer.Deserialize
+                    <List<Pokemon>>(json, options);
                 return list;
             }
         }

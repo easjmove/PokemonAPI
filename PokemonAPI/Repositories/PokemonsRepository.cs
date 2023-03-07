@@ -12,9 +12,9 @@ namespace PokemonAPI.Repositories
             _nextID = 1;
             _pokemons = new List<Pokemon>()
             {
-                new Pokemon() {Id = _nextID++, name="Pikachu", level=9999, PokeDex=25},
-                new Pokemon() {Id = _nextID++, name="Charmander", level=1000, PokeDex=12},
-                new Pokemon() {Id = _nextID++, name="Arbok", level=20, PokeDex=80},
+                new Pokemon() {Id = _nextID++, Name="Pikachu", Level=9999, PokeDex=25},
+                new Pokemon() {Id = _nextID++, Name="Charmander", Level=1000, PokeDex=12},
+                new Pokemon() {Id = _nextID++, Name="Arbok", Level=20, PokeDex=80},
             };
         }
 
@@ -24,7 +24,7 @@ namespace PokemonAPI.Repositories
 
             if (namefilter != null)
             {
-                result = result.FindAll(pokemon => pokemon.name.Contains(namefilter,
+                result = result.FindAll(pokemon => pokemon.Name.Contains(namefilter,
                     StringComparison.InvariantCultureIgnoreCase));
             }
 
@@ -69,9 +69,9 @@ namespace PokemonAPI.Repositories
             {
                 return null;
             }
-            foundPokemon.name = updates.name;
+            foundPokemon.Name = updates.Name;
             foundPokemon.PokeDex = updates.PokeDex;
-            foundPokemon.level = updates.level;
+            foundPokemon.Level = updates.Level;
             return foundPokemon;
         }
     }
