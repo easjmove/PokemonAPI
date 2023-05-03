@@ -21,6 +21,8 @@ namespace PokemonAPI.Controllers
         }
 
         // GET: api/Pokemons?minlevel=1&namefilter=har
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet]
         public ActionResult<IEnumerable<Pokemon>> GetAll(
             [FromHeader] int? amount,
